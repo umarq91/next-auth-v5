@@ -26,7 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         await connectDB();
 
             const user = await User.findOne({ email }).select('+password +role');
-if(!user) throw new CredentialsSignin('No user found with the email provided');
+            if(!user) throw new CredentialsSignin('No user found with the email provided');
 
 const isMatched = await compareSync(password, user.password);
 if(!isMatched) throw new CredentialsSignin('Password is incorrect');
@@ -43,4 +43,7 @@ if(!isMatched) throw new CredentialsSignin('Password is incorrect');
     }
     })
   ],
+  pages:{
+    signIn:"/login"
+  }
 }) 
