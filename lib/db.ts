@@ -1,5 +1,4 @@
-import mongoose, { mongo } from "mongoose";
-import { log } from "node:console";
+import mongoose from "mongoose";
 
 const connectDB = async () => {
     // if (mongoose.connection.readyState >= 1) {
@@ -7,20 +6,15 @@ const connectDB = async () => {
     // }
 
     try {
-            console.log("connecting to Db");
-            console.log(process.env.MONGO_URI);
-            
-            await mongoose.connect(process.env.MONGO_URI as string);
+            console.log("connecting to Db");            
+            await mongoose.connect(process.env.MONGO_URI!);
             console.log("connected to Db");
             
 
     } catch (error:any) {
         console.log(error);
-        // process.exit(1);
-        
+        process.exit(1);   
     }
-
-
 }
 
 export default connectDB

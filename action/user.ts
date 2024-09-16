@@ -2,8 +2,9 @@
 
 import connectDB from "@/lib/db";
 import { User } from "@/models/user";
-import { log } from "node:console"
 
+import {hash} from "bcryptjs"
+import { redirect } from "next/navigation";
 export const register = async (formData:FormData) => {
         const firstName=formData.get('firstname') as string;
         const lastName=formData.get('lastname') as string;
@@ -11,22 +12,25 @@ export const register = async (formData:FormData) => {
         const password=formData.get('password') as string;
 
     //TODO:  Add validation and Error
-        
-
+try {
+    
     await connectDB();
 
 
-    //existing user
-    const exisitingUser=  await User.findOne({email});
-    if(exisitingUser) throw new Error("user already exists");
+   // existing user
+   const existingUser = await User.findOne({ email });
+   if (existingUser) throw new Error("User already exists");
+ 
+   const hashedPassword = await hash(password, 12);
+ 
+   await User.create({ firstName, lastName, email, password: hashedPassword });
+   console.log(`User created successfully 🥂`);
+   redirect("/login");
 
-    const user =await User.create({
-        firstName:firstName,
-        lastName:lastName,
-        email:email,
-        password:password
-    })
 
-    console.log("User Created");
+} catch (error:any) {
+    console.log(error);
+    
+}        
     
 }
